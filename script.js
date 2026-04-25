@@ -370,6 +370,33 @@ function updateCountdown() {
 setInterval(updateCountdown, 1000);
 updateCountdown();
 
+// PDF Download fallback
+document.addEventListener('DOMContentLoaded', function() {
+    const downloadBtn = document.querySelector('a[href="./brochure.pdf"]');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            fetch('./brochure.pdf')
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'GREENOWAVEINDIA_BROCHURE.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                })
+                .catch(error => {
+                    console.error('Download failed:', error);
+                    // Fallback to direct link
+                    window.open('./brochure.pdf', '_blank');
+                });
+        });
+    }
+});
+
 
 // Enhanced animations for Patna Expo section
 const patnaExpoObserver = new IntersectionObserver((entries) => {
