@@ -394,6 +394,49 @@ function updateCountdown() {
 setInterval(updateCountdown, 1000);
 updateCountdown();
 
+// Gallery Lightbox Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const galleryImages = document.querySelectorAll('.gallery-image');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightbox-image');
+    const lightboxClose = document.querySelector('.lightbox-close');
+    
+    // Add click event to all gallery images
+    galleryImages.forEach(image => {
+        image.addEventListener('click', function() {
+            const imageSrc = this.src;
+            const imageAlt = this.alt;
+            
+            lightboxImage.src = imageSrc;
+            lightboxImage.alt = imageAlt;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+    
+    // Close lightbox when clicking close button
+    lightboxClose.addEventListener('click', function() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+    
+    // Close lightbox when clicking outside the image
+    lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    });
+    
+    // Close lightbox with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    });
+});
+
 // PDF Download fallback
 document.addEventListener('DOMContentLoaded', function() {
     const downloadBtn = document.querySelector('a[href="./brochure.pdf"]');
