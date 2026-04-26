@@ -115,20 +115,44 @@ if (contactForm) {
         e.preventDefault();
         
         // Get form data
-        const formData = new FormData(contactForm);
         const name = contactForm.querySelector('input[type="text"]').value;
         const email = contactForm.querySelector('input[type="email"]').value;
+        const phone = contactForm.querySelector('input[type="tel"]').value;
         const message = contactForm.querySelector('textarea').value;
         
         // Simple validation
-        if (!name || !email || !message) {
+        if (!name || !email || !phone || !message) {
             showNotification('Please fill in all fields', 'error');
             return;
         }
         
-        // Simulate form submission
-        showNotification('Message sent successfully! We\'ll get back to you soon.', 'success');
-        contactForm.reset();
+        // Create email content
+        const emailSubject = `New Contact Form Submission from ${name}`;
+        const emailBody = `
+Name: ${name}
+Email: ${email}
+Phone: ${phone}
+
+Message:
+${message}
+
+---
+Submitted from Green O Wave Website
+        `;
+        
+        // Create mailto link with multiple recipients
+        const mailtoLink = `mailto:info@greenowave.com,info@greenowave.in?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+        
+        // Open email client
+        window.location.href = mailtoLink;
+        
+        // Show notification
+        showNotification('Opening your email client to send message...', 'info');
+        
+        // Reset form after a delay
+        setTimeout(() => {
+            contactForm.reset();
+        }, 2000);
     });
 }
 
