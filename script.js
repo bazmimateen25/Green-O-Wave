@@ -603,5 +603,128 @@ window.addEventListener('scroll', () => {
     }
 });
 
+// Green EV Click Animation System
+function createEVClickEffect(x, y) {
+    // Create main effect container
+    const effect = document.createElement('div');
+    effect.className = 'ev-click-effect';
+    effect.style.left = x + 'px';
+    effect.style.top = y + 'px';
+    
+    // Create core pulse effect
+    const core = document.createElement('div');
+    core.className = 'ev-click-core';
+    
+    // Create expanding ring
+    const ring = document.createElement('div');
+    ring.className = 'ev-click-ring';
+    
+    // Create electric bolt icon
+    const bolt = document.createElement('div');
+    bolt.className = 'ev-click-bolt';
+    bolt.innerHTML = '⚡';
+    
+    // Add elements to effect container
+    effect.appendChild(core);
+    effect.appendChild(ring);
+    effect.appendChild(bolt);
+    
+    // Create spark particles
+    for (let i = 0; i < 8; i++) {
+        const spark = document.createElement('div');
+        spark.className = 'ev-click-spark';
+        
+        // Random direction for each spark
+        const angle = (Math.PI * 2 * i) / 8;
+        const distance = 50 + Math.random() * 50;
+        const sparkX = Math.cos(angle) * distance;
+        const sparkY = Math.sin(angle) * distance;
+        
+        spark.style.setProperty('--spark-x', sparkX + 'px');
+        spark.style.setProperty('--spark-y', sparkY + 'px');
+        
+        effect.appendChild(spark);
+    }
+    
+    // Add to page
+    document.body.appendChild(effect);
+    
+    // Remove after animation completes
+    setTimeout(() => {
+        if (document.body.contains(effect)) {
+            document.body.removeChild(effect);
+        }
+    }, 1000);
+}
+
+// Create particle trail on mouse move (subtle effect)
+let mouseTimer;
+function createParticleTrail(x, y) {
+    clearTimeout(mouseTimer);
+    mouseTimer = setTimeout(() => {
+        const particle = document.createElement('div');
+        particle.className = 'ev-particle-trail';
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+        
+        document.body.appendChild(particle);
+        
+        setTimeout(() => {
+            if (document.body.contains(particle)) {
+                document.body.removeChild(particle);
+            }
+        }, 400);
+    }, 50);
+}
+
+// Enhanced click event listener
+document.addEventListener('click', function(e) {
+    // Don't trigger on buttons, links, or form elements
+    if (e.target.closest('button, a, input, textarea, select')) {
+        return;
+    }
+    
+    createEVClickEffect(e.clientX, e.clientY);
+    
+    // Optional: Add haptic feedback simulation
+    if (navigator.vibrate) {
+        navigator.vibrate(10);
+    }
+});
+
+// Subtle particle trail on mouse move (throttled)
+let lastTrailTime = 0;
+document.addEventListener('mousemove', function(e) {
+    const now = Date.now();
+    if (now - lastTrailTime > 100) { // Throttle to every 100ms
+        createParticleTrail(e.clientX, e.clientY);
+        lastTrailTime = now;
+    }
+});
+
+// Add special effects for specific sections
+document.addEventListener('click', function(e) {
+    const target = e.target;
+    
+    // Hero section gets enhanced effects
+    if (target.closest('.hero')) {
+        createEVClickEffect(e.clientX, e.clientY);
+        // Add extra burst effect
+        setTimeout(() => {
+            createEVClickEffect(e.clientX + 20, e.clientY + 20);
+        }, 100);
+    }
+    
+    // Gallery section gets photo-like effects
+    if (target.closest('.gallery-item')) {
+        // Already handled by lightbox, but we can add extra effects
+        const rect = target.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        createEVClickEffect(centerX, centerY);
+    }
+});
+
 console.log('Green O Wave Website Loaded Successfully! 🌊⚡');
 console.log('Patna 2nd Term Expo - May 1-3, 2026 🚗⚡');
+console.log('EV Click Effects Enabled! ⚡🌱');
